@@ -18,7 +18,7 @@ const SiteHeader = () => {
           <div className="lg:flex md:hidden items-center gap-10">
             <Link
               className="font-bold text-base transition-colors hover:text-foreground/80 text-foreground/60"
-              href="/"
+              href="/about"
             >
               About
             </Link>
