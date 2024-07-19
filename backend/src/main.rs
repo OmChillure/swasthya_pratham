@@ -1,4 +1,4 @@
-use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use actix_web::{cookie::Cookie, HttpRequest, HttpResponse, HttpServer, Responder, web, App};
 use serde::{Serialize, Deserialize};
 use mongodb::{Client, Collection};
 use actix_cors::Cors;
@@ -15,12 +15,11 @@ struct User {
     phone: String,
 }
 
-#[derive(Debug,Serialize,Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 struct Login {
-    email : String,
-    password : String,
+    email: String,
+    password: String,
 }
-
 
 async fn register(user: web::Json<User>, collection: web::Data<Collection<User>>) -> impl Responder {
     let user = user.into_inner();
@@ -38,7 +37,16 @@ async fn login(user: web::Json<Login>, collection: web::Data<Collection<User>>) 
     let result = collection.find_one(filter, None).await;
 
     match result {
-        Ok(Some(_)) => HttpResponse::Ok().body("Login Successful"),
+        Ok(Some(_)) => {
+            let cookie = Cookie::build("user_email", user.email.clone())
+                .path("/")
+                .http_only(true)
+                .finish();
+            println!("{:?}", cookie);
+            HttpResponse::Ok()
+                .cookie(cookie)
+                .body("Login Successful")
+        },
         Ok(None) => HttpResponse::Unauthorized().body("Invalid Credentials"),
         Err(_) => HttpResponse::InternalServerError().body("Login Error"),
     }
@@ -48,7 +56,7 @@ async fn login(user: web::Json<Login>, collection: web::Data<Collection<User>>) 
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
     let mongo_uri = env::var("MONGO_URI").expect("MONGO_URI must be set in .env file");
-    
+
     let client = Client::with_uri_str(&mongo_uri)
         .await
         .expect("Failed to initialize MongoDB client");
@@ -61,6 +69,7 @@ async fn main() -> std::io::Result<()> {
             .allow_any_header()
             .allow_any_method()
             .allow_any_origin()
+            .supports_credentials() // Allow credentials if needed
             .max_age(3600);
 
         App::new()

@@ -1,39 +1,39 @@
 "use client"
 import { useState } from 'react';
+import axios from 'axios';
 
-const LoginPage = () => {
+const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    console.log('Submitting login request');
+    try {
+      const response = await axios.post('http://127.0.0.1:8080/login', {
+        email,
+        password,
+      }, { withCredentials: true });
 
-    const response = await fetch('http://127.0.0.1:8080/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-
-    const data = await response.text();
-
-    if (response.ok) {
-      setMessage('Login Successful!');
-    } else {
-      setMessage(data);
+      if (response.status === 200) {
+        setMessage('Login Successful');
+      } else {
+        setMessage('Invalid Credentials');
+      }
+    } catch (error) {
+      console.error('Login error:', error); // Log error details for debugging
+      setMessage('Login Error');
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-black dark:text-white p-8 rounded shadow-md w-full border-2 border-black dark:border-white  max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">Login</h1>
-        {message && <p className="mb-4 text-center">{message}</p>}
-        <form onSubmit={handleLogin}>
+        <h2 className="text-2xl font-bold mb-5">Login</h2>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </label>
             <input
@@ -41,12 +41,12 @@ const LoginPage = () => {
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+          <div className="mb-4">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
             </label>
             <input
@@ -54,22 +54,21 @@ const LoginPage = () => {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
-          <div className="flex items-center justify-between">
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Login
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
+          >
+            Login
+          </button>
         </form>
+        {message && <p className="mt-4 text-red-500">{message}</p>}
       </div>
     </div>
   );
 };
 
-export default LoginPage;
+export default Login;
