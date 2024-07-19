@@ -50,8 +50,11 @@ const SiteHeader = () => {
             </div>
           )} */}
         </div>
-          <div className="flex gap-5">
+          <div className="flex gap-1">
             <ModeToggle />
+            <Link href={"/dashboard"}>
+               <Button>Dashboard</Button>
+            </Link>
             <Link href={"/register"}>
                <Button>Register</Button>
             </Link>
