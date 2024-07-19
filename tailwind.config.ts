@@ -1,6 +1,5 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 const defaultTheme = require("tailwindcss/defaultTheme");
- 
 const colors = require("tailwindcss/colors");
 const {
   default: flattenColorPalette,
@@ -12,9 +11,10 @@ const config = {
   content: [
     './pages/**/*.{ts,tsx}',
     './components/**/*.{ts,tsx}',
-    './app/**/*/*.{ts,tsx}',
-    "./src/**/*.{ts,tsx}",
-	],
+    './constants/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+  ],
   prefix: "",
   theme: {
     container: {
@@ -34,9 +34,6 @@ const config = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
-        },
-        boxShadow: {
-          input: `0px 2px 3px -1px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(25,28,33,0.02), 0px 0px 0px 1px rgba(25,28,33,0.08)`,
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
@@ -89,7 +86,11 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate") , addVariablesForColors,require('tailwind-scrollbar-hide')],
+  plugins: [
+    require("tailwindcss-animate"),
+    require('tailwind-scrollbar-hide'),
+    addVariablesForColors,
+  ],
 } satisfies Config
 
 function addVariablesForColors({ addBase, theme }: any) {
@@ -97,10 +98,10 @@ function addVariablesForColors({ addBase, theme }: any) {
   let newVars = Object.fromEntries(
     Object.entries(allColors).map(([key, val]) => [`--${key}`, val])
   );
- 
+
   addBase({
     ":root": newVars,
   });
 }
 
-export default config
+export default config;

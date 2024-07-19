@@ -11,8 +11,8 @@ const inter = Inter({
 
 export const metadata = {
   title: {
-    default: "Dev-g | Social media for devs",
-    template: "Dev-g",
+    default: "Swasthya Pratham | Onestop health solution",
+    template: "",
   },
   description: "A online art evaluator and marketplace for all art fanatics",
   icons: [{ rel: "icon", url: "./logo.png" }],

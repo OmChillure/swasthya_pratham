@@ -35,8 +35,8 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="text-black dark:text-white p-8 rounded shadow-md w-full border-2 border-black dark:border-white  max-w-md">
+    <div className="mt-[2%] flex items-center justify-center">
+      <div className="text-black dark:text-white p-8 rounded shadow-md w-full border-2 border-black dark:border-white max-w-md">
         <h1 className="text-2xl font-bold mb-6 text-center">Register</h1>
         {message && <p className="mb-4 text-center">{message}</p>}
         <form onSubmit={handleRegister}>
