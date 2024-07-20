@@ -10,7 +10,7 @@ export function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/login', request.url))
       }
 
-    if (request.nextUrl.pathname.startsWith('/login') && cookie ) {
+    if (cookie && request.nextUrl.pathname.startsWith('/login') ) {
         return NextResponse.redirect(new URL('/dashboard', request.url))
       }
 
@@ -19,5 +19,5 @@ export function middleware(request: NextRequest) {
 } 
  
 export const config = {
-  matcher: ["/login" ,"/dashboard/:path*" , "/register"],
+  matcher: ["/login" ,"/dashboard/:path*" , "/dashboard" , "/register"],
 }
