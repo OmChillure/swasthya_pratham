@@ -4,6 +4,7 @@ import axios from 'axios';
 import { redirect } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 
+const setCookie = (email:string) => cookies().set('user', email)
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,6 +22,7 @@ const router = useRouter()
 
       if (response.status === 200) {
        setMessage(response.data);
+        setCookie(response.data)
        console.log(response)
         
       } else {
