@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./ui/mode-toggle";
+import { logout } from "@/actions";
 
 const SiteHeader = () => {
 
@@ -60,6 +61,8 @@ const SiteHeader = () => {
             <Link href={"/login"}>
                <Button>Login</Button>
             </Link>
+
+            <Button onClick={()=>logout()}>Logout</Button>
           </div>
       </div>
     </nav>
