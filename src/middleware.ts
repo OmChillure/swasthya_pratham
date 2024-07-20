@@ -6,7 +6,7 @@ export function middleware(request: NextRequest) {
     const cookieStore = cookies();
     const cookie = cookieStore.get('user_email');
     
-    if (!cookie && !request.nextUrl.pathname.startsWith('/login')) {
+    if (!cookie && !request.nextUrl.pathname.startsWith('/login') && !request.nextUrl.pathname.startsWith('/register')) {
         return NextResponse.redirect(new URL('/login', request.url))
       }
 
