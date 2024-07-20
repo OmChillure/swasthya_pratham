@@ -39,13 +39,13 @@ async fn login(user: web::Json<Login>, collection: web::Data<Collection<User>>) 
     match result {
         Ok(Some(_)) => {
             let cookie = Cookie::build("user_email", user.email.clone())
-                .path("/")
-                .http_only(true)
-                .finish();
-            println!("{:?}", cookie);
+            .path("/")
+            .http_only(true)
+            .finish();
+        println!("{:?}", cookie);
             HttpResponse::Ok()
                 .cookie(cookie)
-                .body("Login Successful")
+                .body(user.email)
         },
         Ok(None) => HttpResponse::Unauthorized().body("Invalid Credentials"),
         Err(_) => HttpResponse::InternalServerError().body("Login Error"),

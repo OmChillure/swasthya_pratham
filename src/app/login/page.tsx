@@ -2,12 +2,14 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
 const router = useRouter()
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log('Submitting login request');
@@ -18,7 +20,8 @@ const router = useRouter()
       }, { withCredentials: true });
 
       if (response.status === 200) {
-       setMessage('Login Successful');
+       setMessage(response.data);
+       console.log(response)
         
       } else {
         return setMessage('Invalid Credentials');
@@ -28,7 +31,7 @@ const router = useRouter()
       return setMessage('Login Error');
     }
      
-    return router.push('/profile')
+    return router.push('/dashboard')
 
   };
 
