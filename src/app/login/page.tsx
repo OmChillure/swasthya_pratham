@@ -7,7 +7,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
-
+const router = useRouter()
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log('Submitting login request');
@@ -28,7 +28,7 @@ const Login = () => {
       return setMessage('Login Error');
     }
      
-    return redirect('/profile')
+    return router.push('/profile')
 
   };
 
