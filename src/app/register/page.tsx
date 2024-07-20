@@ -1,4 +1,5 @@
 "use client"
+import { redirect } from 'next/navigation';
 import { useState } from 'react';
 
 const RegisterPage = () => {
@@ -29,8 +30,9 @@ const RegisterPage = () => {
 
     if (response.ok) {
       setMessage('User Registered Successfully!');
+      return redirect('/login')
     } else {
-      setMessage(data);
+      return setMessage(data);
     }
   };
 

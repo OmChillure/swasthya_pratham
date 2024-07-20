@@ -1,6 +1,7 @@
 "use client"
 import { useState } from 'react';
 import axios from 'axios';
+import { redirect } from 'next/navigation';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,14 +18,18 @@ const Login = () => {
       }, { withCredentials: true });
 
       if (response.status === 200) {
-        setMessage('Login Successful');
+       setMessage('Login Successful');
+        
       } else {
-        setMessage('Invalid Credentials');
+        return setMessage('Invalid Credentials');
       }
     } catch (error) {
       console.error('Login error:', error); // Log error details for debugging
-      setMessage('Login Error');
+      return setMessage('Login Error');
     }
+     
+    return redirect('/profile')
+
   };
 
   return (

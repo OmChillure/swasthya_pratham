@@ -1,14 +1,13 @@
 "use client";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { Icons } from "./icons";
 import { ModeToggle } from "./ui/mode-toggle";
 
 const SiteHeader = () => {
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex justify-center h-16 gap-[34%] items-center">
+    <nav className="sticky top-0 h-[10vh] flex justify-center items-center z-50  border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex justify-between max-h-[10vh]  items-center">
         <Link href="/">
           <h1 className=" text-lg mr-4 font-bold sm:inline-block">
             SponsorshipWala
