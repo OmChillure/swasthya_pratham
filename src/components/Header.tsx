@@ -11,7 +11,7 @@ const SiteHeader = () => {
       <div className="container flex justify-between max-h-[10vh]  items-center">
         <Link href="/">
           <h1 className=" text-lg mr-4 font-bold sm:inline-block">
-            SponsorshipWala
+            Repoto
           </h1>
         </Link>
         <div className="flex jsutify-center items-center">
