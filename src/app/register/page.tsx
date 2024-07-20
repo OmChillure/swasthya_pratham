@@ -9,10 +9,10 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const router = useRouter();
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (phone.length !== 10) {
       setMessage('Phone number must be 10 digits');
       return;
@@ -30,7 +30,7 @@ const RegisterPage = () => {
 
     if (response.ok) {
       setMessage('User Registered Successfully!');
-      return redirect('/login')
+      return router.push('/login')
     } else {
       return setMessage(data);
     }
