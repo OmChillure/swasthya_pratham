@@ -28,7 +28,9 @@ export async function login(email: string,password: string) {
       }
     return redirect("/dashboard")
 }
-
+export async function getCurrentUser() {
+  return cookies().get('user')
+}
 export async function logout() {
     cookies().delete("user")
     return redirect("/login")

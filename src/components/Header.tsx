@@ -2,10 +2,12 @@
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { ModeToggle } from "./ui/mode-toggle";
-import { logout } from "@/actions";
+import { getCurrentUser, logout } from "@/actions";
+import { useState } from "react";
 
 const SiteHeader = () => {
-
+  const [user,setUser] = useState<any>();
+  getCurrentUser().then((user)=>setUser(user))
   return (
     <nav className="sticky top-0 h-[10vh] flex justify-center items-center z-50  border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex justify-between max-h-[10vh]  items-center">
@@ -14,7 +16,7 @@ const SiteHeader = () => {
             Repoto
           </h1>
         </Link>
-        <div className="flex jsutify-center items-center">
+        <div className="flex justify-center items-center">
           <div className="lg:flex md:hidden items-center gap-10">
             <Link
               className="font-bold text-base transition-colors hover:text-foreground/80 text-foreground/60"
@@ -52,17 +54,12 @@ const SiteHeader = () => {
         </div>
           <div className="flex gap-1">
             <ModeToggle />
-            <Link href={"/dashboard"}>
+            {user  ? <Link href={"/dashboard"}>
                <Button>Dashboard</Button>
-            </Link>
-            <Link href={"/register"}>
-               <Button>Register</Button>
-            </Link>
-            <Link href={"/login"}>
+            </Link> : <Link href={"/login"}>
                <Button>Login</Button>
-            </Link>
-
-            <Button onClick={()=>logout()}>Logout</Button>
+            </Link> }         
+            {user && <Button onClick={()=>logout()}>Logout</Button>}
           </div>
       </div>
     </nav>

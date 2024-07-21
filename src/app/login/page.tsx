@@ -4,6 +4,8 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { login } from "@/actions";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -66,6 +68,9 @@ const Login = () => {
           </button>
         </form>
         {message && <p className="mt-4 text-red-500">{message}</p>}
+        <Link href={"/register"}>
+               <Button>Don't have an account ? </Button>
+            </Link>
       </div>
     </div>
   );
