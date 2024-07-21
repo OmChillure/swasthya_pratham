@@ -51,7 +51,7 @@ export async function validate(values: z.infer<typeof ProjectSchema>) {
     descr
   }
 }
-export async function upload({name,descr,image}:{name:string,descr:string,image:string}) {
+export async function upload({name,descr,url,email}:{name:string,descr:string,url:string,email:string}) {
   return {
     success : "yeah"
   }

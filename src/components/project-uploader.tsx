@@ -9,10 +9,14 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Input } from "./ui/input"
 import {  upload, validate } from "@/actions"
+
+
+
 export const ProjectSchema = z.object({
   name : z.string().min(1,{message:"Name is required"}),
   descr : z.string().min(1,{message:"descr is required"})
 })
+
 export const Uploader = () => {
     const [image, setImage] = useState<string | undefined>("")
     const [error , setError] = useState<string | undefined>("")
@@ -33,7 +37,7 @@ export const Uploader = () => {
           validate(values).then(data=>{
               if(data?.error) setError(data.error)
                 if(data?.name && data?.descr) {
-                  upload({...data,image}).then(res=>alert(res.success))
+                  upload({...data,image,email}).then(res=>alert(res.success))
                 }
           })
       })
@@ -85,23 +89,18 @@ export const Uploader = () => {
       </form>
     </Form>
             <UploadDropzone
-        endpoint="imageUploader"
+        endpoint="pdfUploader"
         onClientUploadComplete={(res) => {
           setImage(res[0].url)
+          alert(res[0].url)
           setError("")
         }}
         onUploadError={(error: Error) => {
           setError(`ERROR! ${error.message}`);
         }}
       />
-       <div className="text-red-400">{error}</div>
-      {image && <Image
-      src={image}
-      className="w-full aspect-square"
-      width={200}
-      height={200}
-      alt="Img"
-      />}
-        </div>
+      <div className="text-red-400">{error}</div>
+      
+      </div>
     )
 }

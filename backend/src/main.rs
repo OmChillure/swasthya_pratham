@@ -39,9 +39,13 @@ struct CreateItem {
     completed: bool,
 }
 
-// struct AppState {
-//     todo_list: Mutex<Vec<TodoItem>>,
-// }
+#[derive(Debug, Serialize, Deserialize,Clone)]
+struct UploadFile{
+    title : String,
+    description : String,
+    email: String,
+    url : String,
+}
 
 async fn get_todo(
     collection: Data<Collection<Document>>
@@ -137,6 +141,11 @@ async fn login(
     }
 }
 
+
+async fn upload_file() => impl Responder {
+    
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
@@ -149,6 +158,7 @@ async fn main() -> std::io::Result<()> {
     let db = client.database("rust_auth");
     let user_collection: Collection<Document> = db.collection("users");
     let todo_collection: Collection<Document> = db.collection("todo_item");
+    let file_upload: Collection<Document> = db.collection("files");
 
     HttpServer::new(move || {
         let cors = Cors::default()
@@ -161,12 +171,14 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(Data::new(user_collection.clone()))
             .app_data(Data::new(todo_collection.clone()))
+            .app_data(Data::new(file_upload.clone()))
             .wrap(cors)
             .route("/register", web::post().to(register))
             .route("/login", web::post().to(login))
             .route("/todos", web::get().to(get_todo))
             .route("/todos", web::post().to(create_todo))
             .route("/todos/{id}", web::delete().to(delete_todo))
+            .route("/upload", web::post().to(upload_file))
     })
     .bind("127.0.0.1:8080")?
     .run()
