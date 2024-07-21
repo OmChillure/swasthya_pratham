@@ -1,6 +1,5 @@
 "use client"
 import { UploadDropzone } from "@/lib/uploadthing"
-import Image from "next/image"
 import { startTransition, useState, useTransition } from "react"
 import { Button } from "./ui/button"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "./ui/form"
@@ -8,7 +7,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { Input } from "./ui/input"
-import {  upload, validate } from "@/actions"
+import {  getCurrentUser, upload, validate } from "@/actions"
 
 
 
@@ -18,8 +17,10 @@ export const ProjectSchema = z.object({
 })
 
 export const Uploader = () => {
-    const [image, setImage] = useState<string | undefined>("")
+    const [url, setImage] = useState<string | undefined>("")
     const [error , setError] = useState<string | undefined>("")
+    const [email,setEmail] = useState<string | undefined>()
+    getCurrentUser().then(user=>setEmail(user?.value))
     const [isPending,startTransition] = useTransition()
     const form = useForm<z.infer<typeof ProjectSchema>>({
       resolver: zodResolver(ProjectSchema),
@@ -30,14 +31,14 @@ export const Uploader = () => {
     })
     function onSubmit(values: z.infer<typeof ProjectSchema>) {
       setError("")
-      if (!image) {
+      if (!url) {
         return setError("File is required")
       }
       startTransition(()=>{
           validate(values).then(data=>{
               if(data?.error) setError(data.error)
                 if(data?.name && data?.descr) {
-                  upload({...data,image,email}).then(res=>alert(res.success))
+                  upload({...data,url ,email}).then(res=>alert(res.success))
                 }
           })
       })
@@ -78,13 +79,6 @@ export const Uploader = () => {
           )}
         />
       <div className="text-red-400">{error}</div>
-      {image && <Image 
-      src={image}
-      className="w-full aspect-square"
-      width={200}
-      height={200}
-      alt="Img"
-      />}
         <Button className="bg-blue-500/70 font-semibold tracking-wide px-7  text-white" disabled={isPending} type="submit">Create</Button>
       </form>
     </Form>
