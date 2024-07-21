@@ -24,8 +24,8 @@ const Login = () => {
   };
 
   return (
-    <div className="mt-[10%] flex items-center justify-center">
-      <div className="text-black dark:text-white p-8 rounded shadow-md w-full border-2 border-black dark:border-white  max-w-md">
+    <div className="flex p-5 items-center justify-center">
+      <div className="text-black dark:text-white p-8 rounded shadow-md w-full border-2 border-black dark:border-white  max-w-md ">
         <h2 className="text-2xl font-bold mb-5">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -68,9 +68,10 @@ const Login = () => {
           </button>
         </form>
         {message && <p className="mt-4 text-red-500">{message}</p>}
-        <Link href={"/register"}>
-               <Button>Don't have an account ? </Button>
-            </Link>
+        <Link className="block flex my-2 justify-center items-center " href={"/register"}>
+               <Button variant={"link"}>Don't have an account ? </Button>
+        </Link>
+    
       </div>
     </div>
   );

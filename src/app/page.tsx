@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { Testimonials } from "@/components/Testimonials";
+import { UploadButton } from "@/lib/uploadthing";
 import Image from "next/image";
 
 export default function Home() {
