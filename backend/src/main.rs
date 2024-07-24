@@ -136,6 +136,18 @@ async fn login(
     }
 }
 
+async fn get_files(
+    upload_collection: Data<Collection<UploadFile>>,
+) -> impl Responder {
+    let mut cursor = upload_collection.find(None,None).await.unwrap();
+    let mut uploads: Vec<UploadFile> = Vec::new();
+
+    while let Some(result) = cursor.try_next().await.unwrap() {
+        uploads.push(result);
+    }
+    HttpResponse::Ok().json(uploads)
+}
+
 async fn upload_file(
     file: web::Json<UploadFile>,
     upload_collection: Data<Collection<UploadFile>>,
@@ -180,6 +192,7 @@ async fn main() -> std::io::Result<()> {
             .route("/todos", web::get().to(get_todo))
             .route("/todos", web::post().to(create_todo))
             .route("/todos/{id}", web::delete().to(delete_todo))
+            .route("/upload", web::get().to(get_files))
             .route("/upload", web::post().to(upload_file))
     })
     .bind("127.0.0.1:8080")?

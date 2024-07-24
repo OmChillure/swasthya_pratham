@@ -81,7 +81,7 @@ export async function getFiles() {
     const res =await axios.get("http://127.0.0.1:8080/upload")
     console.log(res);
     
-    if(res.status==200){
+    if(res.status===200){
       return {
         body : res.data,
         success : true 
