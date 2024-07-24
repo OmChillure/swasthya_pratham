@@ -39,19 +39,36 @@ export async function logout() {
 }
 
 export async function validate(values: z.infer<typeof ProjectSchema>) {
-  const data = ProjectSchema.safeParse(values);
-  if(!data.success){
-    return {
-      error : "Invalid data"
-    }
-  }
-  const {name , descr} = data.data
+  const {name , descr} = values;
   return {
     name,
     descr
   }
 }
+
 export async function upload({name,descr,url,email}:{name:string,descr:string,url:string,email:string | undefined}) {
+  console.log({name,descr,url,email})
+  try{
+    const response = await axios.post("http://127.0.0.1:8080/upload",{
+      name,
+      descr,
+      url,
+      email,
+    })
+
+    if(response.status === 200) {
+      console.log(response.data)
+      return {data:response.data}
+    } else {
+      console.log("error uplaoding url")
+      return {data:null};
+    }
+
+  }catch(error) {
+    console.error("File Upload", error); // Log error details for debugging
+    return {data:null,error:"Uplaod file url failed"}
+  }
+
   return {
     success : "yeah"
   }
