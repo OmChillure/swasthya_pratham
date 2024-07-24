@@ -1,11 +1,10 @@
 use actix_web::{cookie::Cookie, web, App, HttpResponse, HttpServer, Responder};
 use serde::{Serialize, Deserialize};
-use mongodb::{Client, Collection, bson::{doc, Document, Bson}};
+use mongodb::{Client, Collection, bson::doc};
 use actix_cors::Cors;
 use dotenv::dotenv;
 use std::env;
 use uuid::Uuid;
-use std::sync::Mutex;
 use futures::stream::TryStreamExt;
 use actix_web::web::Data;
 
@@ -39,31 +38,29 @@ struct CreateItem {
     completed: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize,Clone)]
-struct UploadFile{
-    title : String,
-    description : String,
+#[derive(Debug, Serialize, Deserialize, Clone)]
+struct UploadFile {
+    name: String,
+    descr: String,
     email: String,
-    url : String,
+    url: String,
 }
 
 async fn get_todo(
-    collection: Data<Collection<Document>>
+    todo_collection: Data<Collection<TodoItem>>
 ) -> impl Responder {
-    let mut cursor = collection.find(None, None).await.unwrap();
+    let mut cursor = todo_collection.find(None, None).await.unwrap();
     let mut todos: Vec<TodoItem> = Vec::new();
 
-    while let Some(doc) = cursor.try_next().await.unwrap() {
-        if let Ok(todo) = bson::from_bson::<TodoItem>(Bson::Document(doc)) {
-            todos.push(todo);
-        }
+    while let Some(result) = cursor.try_next().await.unwrap() {
+        todos.push(result);
     }
     HttpResponse::Ok().json(todos)
 }
 
 async fn create_todo(
     item: web::Json<CreateItem>,
-    collection: Data<Collection<Document>>,
+    todo_collection: Data<Collection<TodoItem>>,
 ) -> impl Responder {
     let new_todo = TodoItem {
         id: Uuid::new_v4(),
@@ -72,8 +69,7 @@ async fn create_todo(
         completed: item.completed,
     };
 
-    let new_todo_doc = bson::to_document(&new_todo).unwrap();
-    let result = collection.insert_one(new_todo_doc, None).await;
+    let result = todo_collection.insert_one(new_todo.clone(), None).await;
 
     match result {
         Ok(_) => HttpResponse::Ok().json(new_todo),
@@ -86,10 +82,10 @@ async fn create_todo(
 
 async fn delete_todo(
     path: web::Path<Uuid>,
-    collection: Data<Collection<Document>>,
+    todo_collection: Data<Collection<TodoItem>>,
 ) -> impl Responder {
     let filter = doc! { "id": path.to_string() };
-    let result = collection.delete_one(filter, None).await;
+    let result = todo_collection.delete_one(filter, None).await;
 
     match result {
         Ok(delete_result) => {
@@ -108,10 +104,9 @@ async fn delete_todo(
 
 async fn register(
     user: web::Json<User>,
-    collection: Data<Collection<Document>>
+    user_collection: Data<Collection<User>>
 ) -> impl Responder {
-    let user_doc = bson::to_document(&user.into_inner()).unwrap();
-    let result = collection.insert_one(user_doc, None).await;
+    let result = user_collection.insert_one(user.into_inner(), None).await;
 
     match result {
         Ok(_) => HttpResponse::Ok().body("User Registered Successfully"),
@@ -121,10 +116,10 @@ async fn register(
 
 async fn login(
     user: web::Json<Login>,
-    collection: Data<Collection<Document>>
+    user_collection: Data<Collection<User>>
 ) -> impl Responder {
     let filter = doc! { "email": &user.email, "password": &user.password };
-    let result = collection.find_one(filter, None).await;
+    let result = user_collection.find_one(filter, None).await;
 
     match result {
         Ok(Some(_)) => {
@@ -134,16 +129,23 @@ async fn login(
                 .finish();
             HttpResponse::Ok()
                 .cookie(cookie)
-                .body("Login successful")
+                .body(user.email.clone())
         },
         Ok(None) => HttpResponse::Unauthorized().body("Invalid Credentials"),
         Err(_) => HttpResponse::InternalServerError().body("Login Error"),
     }
 }
 
+async fn upload_file(
+    file: web::Json<UploadFile>,
+    upload_collection: Data<Collection<UploadFile>>,
+) -> impl Responder {
+    let result = upload_collection.insert_one(file.into_inner(), None).await;
 
-async fn upload_file() => impl Responder {
-    
+    match result {
+        Ok(_) => HttpResponse::Ok().body("File Uploaded Successfully"),
+        Err(_) => HttpResponse::InternalServerError().body("Error uploading file"),
+    }
 }
 
 #[actix_web::main]
@@ -156,9 +158,9 @@ async fn main() -> std::io::Result<()> {
         .expect("Failed to initialize MongoDB client");
 
     let db = client.database("rust_auth");
-    let user_collection: Collection<Document> = db.collection("users");
-    let todo_collection: Collection<Document> = db.collection("todo_item");
-    let file_upload: Collection<Document> = db.collection("files");
+    let user_collection: Collection<User> = db.collection("users");
+    let todo_collection: Collection<TodoItem> = db.collection("todo_item");
+    let upload_collection: Collection<UploadFile> = db.collection("upload_file");
 
     HttpServer::new(move || {
         let cors = Cors::default()
@@ -171,7 +173,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .app_data(Data::new(user_collection.clone()))
             .app_data(Data::new(todo_collection.clone()))
-            .app_data(Data::new(file_upload.clone()))
+            .app_data(Data::new(upload_collection.clone()))
             .wrap(cors)
             .route("/register", web::post().to(register))
             .route("/login", web::post().to(login))
