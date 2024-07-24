@@ -38,7 +38,7 @@ struct CreateItem {
     completed: bool,
 }
 
-#[derive(Debug, Serialize, Deserialize, Clone)]
+#[derive(Debug, Serialize,Deserialize, Clone)]
 struct UploadFile {
     name: String,
     descr: String,
@@ -137,15 +137,15 @@ async fn login(
 }
 
 async fn get_files(
-    upload_collection: Data<Collection<UploadFile>>
-) => impl Responder {
+    upload_collection: Data<Collection<UploadFile>>,
+) -> impl Responder {
     let mut cursor = upload_collection.find(None,None).await.unwrap();
-    let mut result: Vec<UploadFile> = Vec::new();
+    let mut uploads: Vec<UploadFile> = Vec::new();
 
-    while let Some(result) == cursor.try_next().await.unwrap() {
-        result.push(result);
+    while let Some(result) = cursor.try_next().await.unwrap() {
+        uploads.push(result);
     }
-    HttpResponse::Ok().json(result);
+    HttpResponse::Ok().json(uploads)
 }
 
 async fn upload_file(
