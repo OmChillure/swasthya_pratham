@@ -73,3 +73,28 @@ export async function upload({name,descr,url,email}:{name:string,descr:string,ur
     success : "yeah"
   }
 }
+
+
+
+export async function getFiles() {
+  try {
+    const res =await axios.get("http://127.0.0.1:8080/upload")
+    console.log(res);
+    
+    if(res.status===200){
+      return {
+        body : res.data,
+        success : true 
+      }
+    }else{
+      return {
+        success : false, 
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      success :false
+    }
+  }
+}
