@@ -1,0 +1,24 @@
+Patient Name: John Doe
+Patient ID: 123456
+Date: 2024-07-26
+
+Diagnosis: Malaria, uncomplicated
+
+Medication:
+
+Chloroquine Phosphate Tablets 250 mg:
+Dose: 2 tablets once daily for 3 days
+Paracetamol Tablets 500 mg:
+Dose: 1 tablet every 4-6 hours as needed for fever
+
+Instructions:
+
+Complete the full course of medication.
+Drink plenty of fluids.
+Seek medical attention if symptoms persist or worsen.
+Follow-up:
+
+Return to clinic in 7 days for follow-up.
+Prescriber:
+Dr. Jane Smith
+Medical Registration Number: ABC123456

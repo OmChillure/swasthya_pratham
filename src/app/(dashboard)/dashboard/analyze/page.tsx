@@ -1,9 +1,9 @@
-import React from 'react'
+import { Ai } from '@/components/ai'
 
 function page() {
   return (
-    <div>
-      
+    <div className='p-5'>
+      <Ai/>
     </div>
   )
 }

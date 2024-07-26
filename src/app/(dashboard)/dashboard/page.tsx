@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import Link from 'next/link';
 
 export default function page() {
   return (
@@ -25,7 +26,11 @@ export default function page() {
           </h2>
           <div className="hidden items-center space-x-2 md:flex">
             <CalendarDateRangePicker />
-            <Button>Download</Button>
+            <Button>
+              <Link href={"/dashboard/analyze"}>
+                Analysis
+              </Link>
+            </Button>
           </div>
         </div>
         <Tabs defaultValue="overview" className="space-y-4">
