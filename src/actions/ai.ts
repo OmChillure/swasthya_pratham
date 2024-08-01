@@ -18,6 +18,7 @@ export async function main() {
   const essay = await fs.readFile(path,"utf-8");
   const document = new Document({ text: essay, id_: path });
   const index = await VectorStoreIndex.fromDocuments([document]);
+  console.log(index)
 
   const queryEngine = index.asQueryEngine();
  const res= await queryEngine.query({
