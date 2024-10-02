@@ -1,14 +1,28 @@
-import "@/styles/global.css"
+import "@/styles/global.css";
 
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
+import { Manrope } from "next/font/google";
+import { cn } from "@/lib/utils";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
+
+const fontHeading = Manrope({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-heading',
+})
+
+const fontBody = Manrope({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-body',
+})
 
 export const metadata = {
   title: {
@@ -25,18 +39,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-      <html lang="en">
-        <body className={`font-sans ${inter.variable}`}>
-          <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-              >
-              <Header />
-              {children}
-            </ThemeProvider> 
-          </body>
-      </html>
+    <html lang="en">
+      <body
+        className={cn("antialiased", fontHeading.variable, fontBody.variable)}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Header />
+          {children}
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
